@@ -6,15 +6,11 @@ import matplotlib.pyplot as plt
 import  random
 from mstheuristic import mstseq
 from naivemst import mst
-
+import probabilitymst
 import mstheuristic
 
-from  graph import  Graph
-## 2522
-## 2453
-## 2643
-## 2444
-## modified always get thoes distance with a good
+from  graph import Graph
+
 class MyTestCase(unittest.TestCase):
     def testGetRandomSequence(self):
 
@@ -24,22 +20,27 @@ class MyTestCase(unittest.TestCase):
         print random.randrange(0, 10)
 
 
+    def runProbabilityMstHillClimbing(self):
+        self.fillgraph(graph1)
+        tree = probabilitymst.mst(graph1)
+
+        ans_seq = mstheuristic.hillClimbing(graph1, tree)
+
+        return ans_seq
+
+
     def runMstHillClimbing(self):
-        iteration = 1000
-        maxselectiontime =100
         self.fillgraph(graph1)
         tree = mst(graph1)
 
-        ans_seq = mstheuristic.hillClimbing(graph1, iteration, maxselectiontime, tree)
+        ans_seq = mstheuristic.hillClimbing(graph1, tree)
 
         return ans_seq
 
 
     def runhillClimbing(self):
-        iteration = 1000
-        maxselectiontime =100
 
-        ans_seq = hillClimbing(graph1, iteration, maxselectiontime)
+        ans_seq = hillClimbing(graph1)
 
         return ans_seq
 
@@ -48,8 +49,6 @@ class MyTestCase(unittest.TestCase):
     def median(self, l):
         mid = len(l) /2
         return l[mid]
-
-
 
     ## todo how to verify a good initial point can get a better result???
     def testHillClimbing(self):
@@ -61,16 +60,14 @@ class MyTestCase(unittest.TestCase):
             seq_cost = cost(seq, graph1)
 
             ans.append((seq, seq_cost))
-
+            print i
         cost_list = [float(ans[i][1]) for i in range(len(ans))]
 
         print self.mean(cost_list), max(cost_list), min(cost_list)
 
         self.drawHist(cost_list)
 
-
-    ## todo how to verify a good initial point can get a better result???
-    def testMstHeuristicHillClimbing(self):
+    def testMstHillClimbing(self):
         restartTime = 200
 
         ans = []
@@ -85,6 +82,24 @@ class MyTestCase(unittest.TestCase):
         print self.mean(cost_list), max(cost_list), min(cost_list)
 
         self.drawHist(cost_list)
+
+
+    def testProbabilityMstHillClimbing(self):
+        restartTime = 1000
+
+        ans = []
+        for i in range(restartTime):
+            seq = self.runProbabilityMstHillClimbing()
+            seq_cost = cost(seq, graph1)
+
+            ans.append((seq, seq_cost))
+
+        cost_list = [float(ans[i][1]) for i in range(len(ans))]
+
+        print self.mean(cost_list), max(cost_list), min(cost_list)
+
+        self.drawHist(cost_list)
+
 
     def fillgraph(self, graph):
         row = col = len(graph)
@@ -124,7 +139,6 @@ class MyTestCase(unittest.TestCase):
     def drawHist(self, data):
         plt.hist(data, bins=int(100))
         plt.show()
-
 
 if __name__ == '__main__':
     unittest.main()

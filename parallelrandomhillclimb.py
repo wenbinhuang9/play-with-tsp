@@ -1,6 +1,6 @@
+import sys
 import  random
 # A hill climbing algorithm with random selection.
-## todo can I remember sth. here
 def cost(chromosome, city_distance_data):
   distance = 0
   previous_city_no = 0
@@ -41,25 +41,24 @@ def climb(curState, graph):
 
 
 
-
-def hillClimbing(graph):
+def hillClimbing(graph, parallel):
   row, col = len(graph), len(graph[0])
   cityNum = row
   assert row == col
 
   curSeq = init(cityNum)
-  while True:
-    nextSeq = climb( curSeq , graph)
-    if nextSeq == None:
-      ## termination, because can't find better solution after limited selections.
-      return curSeq
+  globalMax = sys.maxint
+  globalSeq = None
+  while parallel > 0 :
+    while True:
+      nextSeq = climb( curSeq , graph)
+      if nextSeq == None:
+        ## termination, because can't find better solution after limited selections.
+        return curSeq
+      curSeq = nextSeq
 
-    #iteration -= 1
-    curcost = cost(nextSeq, graph)
-
-    print curcost
-    curSeq = nextSeq
-
-  return curSeq
+    if cost(curSeq, graph) > globalMax:
+      globalSeq =curSeq
+  return globalSeq
 
 

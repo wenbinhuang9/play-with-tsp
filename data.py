@@ -39,3 +39,12 @@ graph1 = [[0, 129, 206, 569, 107, 360, 284, 144, 115, 162, 200, 231, 288, 226, 4
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 
+def fillgraph(graph):
+    row = col = len(graph)
+
+    for i in range(row):
+        for j in range(col):
+            if i > j:
+                graph[i][j] = graph[j][i]
+
+    return graph

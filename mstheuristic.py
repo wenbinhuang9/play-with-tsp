@@ -43,29 +43,36 @@ def init(cityNum, tree):
   return getRandomSequence(cityNum, tree )
 
 ## accept a bad result when we can't go forward???
-def climb(seq, randomSelectionTimes, cityNum, graph, tree ):
-  while randomSelectionTimes > 0:
-    nextSeq = getRandomSequence(cityNum,tree)
-    if cost(nextSeq, graph) < cost(seq, graph):
-      return nextSeq
-    randomSelectionTimes -= 1
+
+def climb(curState, graph):
+  row = len(graph)
+  curCost = cost(curState, graph)
+  for i in range(row):
+    for j in range(i + 1, row):
+      nextState = curState[:]
+      nextState[i], nextState[j] = nextState[j], nextState[i]
+      nextCost = cost(nextState, graph)
+      if nextCost < curCost:
+        return nextState
 
   return None
 
-def hillClimbing(graph, iteration, randomSelectionTimes, tree ):
+def hillClimbing(graph, tree ):
   row, col = len(graph), len(graph[0])
   cityNum = row
   assert row == col
 
-  seq = init(cityNum, tree)
-
+  curSeq = init(cityNum, tree)
+  a = len(curSeq)
+  iteration = 10000
   while iteration > 0:
-    nextSeq = climb(seq, randomSelectionTimes, cityNum, graph, tree )
+    nextSeq = climb(curSeq, graph )
     if nextSeq == None:
       ## termination, because can't find better solution after limited selections.
-      return seq
+      return curSeq
     iteration -= 1
+    curSeq = nextSeq
 
-  return nextSeq
+  return curSeq
 
 
