@@ -1,6 +1,28 @@
-import sys
 import  random
-# A hill climbing algorithm with random selection.
+
+def localBeamSearch(graph, beamNum):
+  row, col = len(graph), len(graph[0])
+  cityNum = row
+
+  beam = initBeam(beamNum, cityNum)
+
+  while True:
+    nextSuc = []
+    for curState in beam:
+      successors = climbToNextKSuccessors(curState, graph, beamNum)
+
+      nextSuc.extend(successors)
+
+    if len(successors) == 1:
+      return best(successors, graph)
+    if len(successors) == 0 :
+      return best(beam, graph)
+
+    beam = selectNextKSuccessors(nextSuc, beamNum, graph)
+
+  return best(beam, graph)
+
+
 def cost(chromosome, city_distance_data):
   distance = 0
   previous_city_no = 0
@@ -53,26 +75,5 @@ def selectNextKSuccessors(nextSucs, beamNum, graph):
 def best(beam, graph):
   return max([cost(state, graph) for state in beam])
 
-def localBeamSearch(graph, beamNum):
-  row, col = len(graph), len(graph[0])
-  cityNum = row
-
-  beam = initBeam(beamNum, cityNum)
-
-  while True:
-    nextSuc = []
-    for curState in beam:
-      successors = climbToNextKSuccessors(curState, graph, beamNum)
-
-      nextSuc.extend(successors)
-
-    if len(successors) == 1:
-      return best(successors, graph)
-    if len(successors) == 0 :
-      return best(beam, graph)
-    beam = selectNextKSuccessors(nextSuc, beamNum, graph)
-    #iterations -= 1
-
-  return best(beam, graph)
 
 

@@ -64,7 +64,6 @@ class MyTestCase(unittest.TestCase):
         mid = len(l) /2
         return l[mid]
 
-    ## todo how to verify a good initial point can get a better result???
     def testHillClimbing(self):
         restartTime = 200
         self.fillgraph(graph1)

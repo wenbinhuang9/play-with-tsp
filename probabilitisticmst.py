@@ -1,8 +1,7 @@
 
 ## probabilistic mst
-
-import  sys
 import random
+
 def mst(graph):
     num = len(graph)
     visited = [False for _ in range(num)]
