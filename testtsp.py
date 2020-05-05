@@ -1,15 +1,15 @@
 import unittest
 
-from randomhillclimbing import hillClimbing, getRandomSequence, cost
-from  data import  graph1
+from simplehillclimbing import hillClimbing, getRandomSequence, cost
+from data import graph1
 import matplotlib.pyplot as plt
-import  random
+import random
 from mstheuristic import mstseq
-from naivemst import mst
-import probabilitymst
+from mst import mst
+import probabilitisticmst
 import mstheuristic
-from  localbeamsearch import localBeamSearch
-from  graph import Graph
+from localbeamsearch import localBeamSearch
+from graph import Graph
 
 class MyTestCase(unittest.TestCase):
     def testGetRandomSequence(self):
@@ -36,7 +36,7 @@ class MyTestCase(unittest.TestCase):
 
     def runProbabilityMstHillClimbing(self):
         self.fillgraph(graph1)
-        tree = probabilitymst.mst(graph1)
+        tree = probabilitisticmst.mst(graph1)
 
         ans_seq = mstheuristic.hillClimbing(graph1, tree)
 

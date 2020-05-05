@@ -1,4 +1,6 @@
 import  random
+
+from naivemst import mst
 # A hill climbing algorithm with random selection.
 ## todo can I remember sth. here
 def cost(chromosome, city_distance_data):
@@ -12,19 +14,35 @@ def cost(chromosome, city_distance_data):
 
   return distance
 
-def getRandomSequence(city_num):
-  chromosome = range(1, city_num)
-  ## randomize chromosome
-  seq = random.shuffle(chromosome)
 
-  ans = [0]
-  ans.extend(chromosome)
+def getRandomSequence(city_num, tree ):
+
+    return mstseq(tree, city_num)
+
+#   start_city = random.randrange(0, city_num)
+
+def mstseq(tree, city_num):
+  node = random.randrange(0, city_num)
+
+  seq = dfsrecursive(node, tree, city_num, set([]))
+
+  return seq
+def dfsrecursive(node, tree, city_num, visited):
+  visited.add(node)
+
+  ans = [node]
+  for i in range(city_num):
+    if i not in visited and tree[node][i] > 0 :
+      subans =  dfsrecursive(i, tree, city_num, visited)
+      ans.extend(subans)
 
   return ans
 
-def init(cityNum):
-  return getRandomSequence(cityNum)
 
+def init(cityNum, tree):
+  return getRandomSequence(cityNum, tree )
+
+## accept a bad result when we can't go forward???
 
 def climb(curState, graph):
   row = len(graph)
@@ -39,25 +57,24 @@ def climb(curState, graph):
 
   return None
 
+## the key is to implement from here!
+def nearest(cityNum, graph):
+  pass
 
-
-
-def hillClimbing(graph):
+def hillClimbing(graph, tree ):
   row, col = len(graph), len(graph[0])
   cityNum = row
   assert row == col
 
-  curSeq = init(cityNum)
-  while True:
-    nextSeq = climb( curSeq , graph)
+  curSeq = nearest(cityNum, graph)
+
+  iteration = 10000
+  while iteration > 0:
+    nextSeq = climb(curSeq, graph )
     if nextSeq == None:
       ## termination, because can't find better solution after limited selections.
       return curSeq
-
-    #iteration -= 1
-    curcost = cost(nextSeq, graph)
-
-    print curcost
+    iteration -= 1
     curSeq = nextSeq
 
   return curSeq
