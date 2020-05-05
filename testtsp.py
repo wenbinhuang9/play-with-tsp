@@ -8,7 +8,7 @@ from mstheuristic import mstseq
 from naivemst import mst
 import probabilitymst
 import mstheuristic
-
+from  localbeamsearch import localBeamSearch
 from  graph import Graph
 
 class MyTestCase(unittest.TestCase):
@@ -19,6 +19,20 @@ class MyTestCase(unittest.TestCase):
 
         print random.randrange(0, 10)
 
+    def testLocalBeamSearch(self):
+        iteration =200
+
+        self.fillgraph(graph1)
+
+        scores = []
+        for i in range(iteration):
+            maxcost = localBeamSearch(graph1, 100)
+            print i
+            scores.append(maxcost)
+
+
+        print min(scores), max(scores), sum(scores)/(len(scores) + 0.0)
+        self.drawHist(scores)
 
     def runProbabilityMstHillClimbing(self):
         self.fillgraph(graph1)

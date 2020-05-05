@@ -24,7 +24,7 @@ class Graph():
             self.node.add(b)
             self.graph.node(b, shape = shape)
 
-        self.graph.edge(a, b, label = symbol, style=style, shape= "box")
+        self.graph.edge(a, b, label = symbol, style=style, shape= "box", arrowhead = "none")
 
     def render(self, file):
         self.graph.render(file)
