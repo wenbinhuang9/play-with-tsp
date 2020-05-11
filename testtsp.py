@@ -1,26 +1,75 @@
 import unittest
 
-from simplehillclimbing import hillClimbing, getRandomSequence, cost
+from simplehillclimbing import hillClimbing, cost
 from data import graph1
 import matplotlib.pyplot as plt
-import random
-from mstheuristic import mstseq
 from mst import mst
 import probabilisticmst
-import mstheuristic
 from localbeam import localBeamSearch
 from graph import Graph
+import msthillclimbing
 
 class MyTestCase(unittest.TestCase):
-    def testGetRandomSequence(self):
+    def testSimpleHillClimbing(self):
+        runTimes = 200
+        self.fillgraph(graph1)
+        ans = []
+        for i in range(runTimes):
+            seq = hillClimbing(graph1)
+            seq_cost = cost(seq, graph1)
 
-        seq = getRandomSequence(10)
-        print seq
+            ans.append((seq, seq_cost))
+            print i
+        cost_list = [float(ans[i][1]) for i in range(len(ans))]
 
-        print random.randrange(0, 10)
+        print self.mean(cost_list), max(cost_list), min(cost_list)
+
+        self.drawHist(cost_list)
+
+
+    def testMstHillClimbing(self):
+        runTimes = 200
+
+        ans = []
+        self.fillgraph(graph1)
+
+        for i in range(runTimes):
+            tree = mst(graph1)
+
+            seq = msthillclimbing.hillClimbing(graph1, tree)
+
+            seq_cost = cost(seq, graph1)
+
+            ans.append((seq, seq_cost))
+
+        cost_list = [float(ans[i][1]) for i in range(len(ans))]
+
+        print self.mean(cost_list), max(cost_list), min(cost_list)
+
+        self.drawHist(cost_list)
+
+    def testProbabilityMstHillClimbing(self):
+        runTimes = 200
+        self.fillgraph(graph1)
+
+        ans = []
+        for i in range(runTimes):
+            tree = probabilisticmst.probabilisticmst(graph1)
+
+            seq = msthillclimbing.hillClimbing(graph1, tree)
+
+            seq_cost = cost(seq, graph1)
+
+            ans.append((seq, seq_cost))
+
+        cost_list = [float(ans[i][1]) for i in range(len(ans))]
+
+        print self.mean(cost_list), max(cost_list), min(cost_list)
+
+        self.drawHist(cost_list)
 
     def testLocalBeamSearch(self):
-        iteration =200
+        iteration = 50
 
         self.fillgraph(graph1)
 
@@ -34,85 +83,12 @@ class MyTestCase(unittest.TestCase):
         print min(scores), max(scores), sum(scores)/(len(scores) + 0.0)
         self.drawHist(scores)
 
-    def runProbabilityMstHillClimbing(self):
-        self.fillgraph(graph1)
-        tree = probabilisticmst.mst(graph1)
-
-        ans_seq = mstheuristic.hillClimbing(graph1, tree)
-
-        return ans_seq
-
-
-    def runMstHillClimbing(self):
-        self.fillgraph(graph1)
-        tree = mst(graph1)
-
-        ans_seq = mstheuristic.hillClimbing(graph1, tree)
-
-        return ans_seq
-
-
-    def runhillClimbing(self):
-
-        ans_seq = hillClimbing(graph1)
-
-        return ans_seq
-
     def mean(self, l):
         return sum(l)/(len(l) + 0.0)
+
     def median(self, l):
-        mid = len(l) /2
+        mid = len(l) / 2
         return l[mid]
-
-    def testHillClimbing(self):
-        restartTime = 200
-        self.fillgraph(graph1)
-        ans = []
-        for i in range(restartTime):
-            seq = self.runhillClimbing()
-            seq_cost = cost(seq, graph1)
-
-            ans.append((seq, seq_cost))
-            print i
-        cost_list = [float(ans[i][1]) for i in range(len(ans))]
-
-        print self.mean(cost_list), max(cost_list), min(cost_list)
-
-        self.drawHist(cost_list)
-
-    def testMstHillClimbing(self):
-        restartTime = 200
-
-        ans = []
-        for i in range(restartTime):
-            seq = self.runMstHillClimbing()
-            seq_cost = cost(seq, graph1)
-
-            ans.append((seq, seq_cost))
-
-        cost_list = [float(ans[i][1]) for i in range(len(ans))]
-
-        print self.mean(cost_list), max(cost_list), min(cost_list)
-
-        self.drawHist(cost_list)
-
-
-    def testProbabilityMstHillClimbing(self):
-        restartTime = 1000
-
-        ans = []
-        for i in range(restartTime):
-            seq = self.runProbabilityMstHillClimbing()
-            seq_cost = cost(seq, graph1)
-
-            ans.append((seq, seq_cost))
-
-        cost_list = [float(ans[i][1]) for i in range(len(ans))]
-
-        print self.mean(cost_list), max(cost_list), min(cost_list)
-
-        self.drawHist(cost_list)
-
 
     def fillgraph(self, graph):
         row = col = len(graph)
@@ -122,7 +98,7 @@ class MyTestCase(unittest.TestCase):
                 if i > j:
                     graph[i][j] = graph[j][i]
 
-    def testmst(self):
+    def testMst(self):
         self.fillgraph(graph1)
         tree = mst(graph1)
 
@@ -139,15 +115,7 @@ class MyTestCase(unittest.TestCase):
         print min_bound
         g.render("./mst")
 
-    def testmstseq(self):
-        self.fillgraph(graph1)
 
-        tree = mst(graph1)
-        city_num = len(tree)
-
-        seq = mstseq(tree, city_num)
-
-        print  seq
 
     def drawHist(self, data):
         plt.hist(data, bins=int(100))

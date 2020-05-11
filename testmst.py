@@ -3,12 +3,12 @@ import unittest
 from graph import Graph
 
 from  data import graph1, fillgraph
-from probabilisticmst import mst
+from probabilisticmst import probabilisticmst
 class MyTestCase(unittest.TestCase):
     def test_propabilisitc_mst(self):
         graph = fillgraph(graph1)
         num = len(graph)
-        tree = mst(graph)
+        tree = probabilisticmst(graph)
 
         g = Graph()
         min_bound = 0

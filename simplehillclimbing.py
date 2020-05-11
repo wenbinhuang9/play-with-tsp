@@ -1,37 +1,23 @@
 import random
 
 def hillClimbing(graph):
-  row, col = len(graph), len(graph[0])
-  cityNum = row
-  assert row == col
+  cityNum, row, col = len(graph), len(graph), len(graph[0])
 
-  curSeq = init(cityNum)
+  curState = getRandomSequence(cityNum)
+
   while True:
-    nextSeq = climb( curSeq , graph)
-    if nextSeq == None:
-      ## termination, because can't find better solution after limited selections.
-      return curSeq
+    nextState = climb( curState , graph)
 
-    #iteration -= 1
-    curcost = cost(nextSeq, graph)
+    if nextState == None:
+      ## we have got to a optimality point
+      return curState
 
-    print curcost
-    curSeq = nextSeq
+    curState = nextState
 
-  return curSeq
-
-def cost(chromosome, city_distance_data):
-  distance = 0
-  previous_city_no = 0
-  for cur_city_no in chromosome:
-    distance += city_distance_data[previous_city_no][cur_city_no]
-    previous_city_no = cur_city_no
-
-  distance += city_distance_data[previous_city_no][0]
-
-  return distance
+  return curState
 
 
+## climb to next states with lower cost
 def climb(curState, graph):
   row = len(graph)
 
@@ -51,15 +37,20 @@ def getRandomSequence(city_num):
   chromosome = range(1, city_num)
   random.shuffle(chromosome)
 
-  ans = [0]
-  ans.extend(chromosome)
-  return ans
+  state = [0]
+  state.extend(chromosome)
+  return state
 
-def init(cityNum):
-  return getRandomSequence(cityNum)
+def cost(chromosome, city_distance_data):
+  distance = 0
+  previous_city_no = 0
+  for cur_city_no in chromosome:
+    distance += city_distance_data[previous_city_no][cur_city_no]
+    previous_city_no = cur_city_no
 
+  distance += city_distance_data[previous_city_no][0]
 
-
+  return distance
 
 
 

@@ -1,8 +1,8 @@
 
-## probabilistic mst
+## generate probabilistic good mst
 import random
 
-def mst(graph):
+def probabilisticmst(graph):
     num = len(graph)
     visited = [False for _ in range(num)]
 
