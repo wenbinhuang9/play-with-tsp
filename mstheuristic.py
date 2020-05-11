@@ -1,49 +1,27 @@
 import  random
 
-from naivemst import mst
-# A hill climbing algorithm with random selection.
-## todo can I remember sth. here
-def cost(chromosome, city_distance_data):
-  distance = 0
-  previous_city_no = 0
-  for cur_city_no in chromosome:
-    distance += city_distance_data[previous_city_no][cur_city_no]
-    previous_city_no = cur_city_no
+def hillClimbing(graph, tree):
+  row, col = len(graph), len(graph[0])
+  cityNum = row
 
-  distance += city_distance_data[previous_city_no][0]
+  ## heuristic by generating sequence from MST
+  curState= genMstRandomly(tree, cityNum)
 
-  return distance
+  iteration = 10000
+  while iteration > 0:
+    nextState = climb(curState, graph)
 
+    if nextState == None:
+      ## termination, because can't find better solution after limited selections.
+      return curState
 
-def getRandomSequence(city_num, tree ):
+    iteration -= 1
+    curState = nextState
 
-    return mstseq(tree, city_num)
+  return curState
 
-#   start_city = random.randrange(0, city_num)
-
-def mstseq(tree, city_num):
-  node = random.randrange(0, city_num)
-
-  seq = dfsrecursive(node, tree, city_num, set([]))
-
-  return seq
-def dfsrecursive(node, tree, city_num, visited):
-  visited.add(node)
-
-  ans = [node]
-  for i in range(city_num):
-    if i not in visited and tree[node][i] > 0 :
-      subans =  dfsrecursive(i, tree, city_num, visited)
-      ans.extend(subans)
-
-  return ans
-
-
-def init(cityNum, tree):
-  return getRandomSequence(cityNum, tree )
-
-## accept a bad result when we can't go forward???
-
+##generate next states by swapping any two cities
+##Get the new sequence with lower cost
 def climb(curState, graph):
   row = len(graph)
   curCost = cost(curState, graph)
@@ -57,22 +35,35 @@ def climb(curState, graph):
 
   return None
 
-def hillClimbing(graph, tree ):
-  row, col = len(graph), len(graph[0])
-  cityNum = row
-  assert row == col
+def genMstRandomly(mstTree, city_num):
+  node = random.randrange(0, city_num)
 
-  curSeq = init(cityNum, tree)
-  a = len(curSeq)
-  iteration = 10000
-  while iteration > 0:
-    nextSeq = climb(curSeq, graph )
-    if nextSeq == None:
-      ## termination, because can't find better solution after limited selections.
-      return curSeq
-    iteration -= 1
-    curSeq = nextSeq
+  seq = genMstRecursive(node, mstTree, city_num, set([]))
 
-  return curSeq
+  return seq
+
+
+def genMstRecursive(node, tree, city_num, visited):
+  visited.add(node)
+
+  ans = [node]
+  for i in range(city_num):
+    if i not in visited and tree[node][i] > 0 :
+      subans =  genMstRecursive(i, tree, city_num, visited)
+      ans.extend(subans)
+
+  return ans
+
+
+def cost(state, city_distance_data):
+  distance = 0
+  previous_city_no = 0
+  for cur_city_no in state:
+    distance += city_distance_data[previous_city_no][cur_city_no]
+    previous_city_no = cur_city_no
+
+  distance += city_distance_data[previous_city_no][0]
+
+  return distance
 
 

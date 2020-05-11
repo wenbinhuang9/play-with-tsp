@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import random
 from mstheuristic import mstseq
 from mst import mst
-import probabilitisticmst
+import probabilisticmst
 import mstheuristic
-from localbeamsearch import localBeamSearch
+from localbeam import localBeamSearch
 from graph import Graph
 
 class MyTestCase(unittest.TestCase):
@@ -36,7 +36,7 @@ class MyTestCase(unittest.TestCase):
 
     def runProbabilityMstHillClimbing(self):
         self.fillgraph(graph1)
-        tree = probabilitisticmst.mst(graph1)
+        tree = probabilisticmst.mst(graph1)
 
         ans_seq = mstheuristic.hillClimbing(graph1, tree)
 

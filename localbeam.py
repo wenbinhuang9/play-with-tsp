@@ -1,4 +1,4 @@
-import  random
+import random
 
 def localBeamSearch(graph, beamNum):
   row, col = len(graph), len(graph[0])
@@ -9,19 +9,52 @@ def localBeamSearch(graph, beamNum):
   while True:
     nextSuc = []
     for curState in beam:
-      successors = climbToNextKSuccessors(curState, graph, beamNum)
+      nextbeam = climbToNextBeam(curState, graph, beamNum)
 
-      nextSuc.extend(successors)
+      nextSuc.extend(nextbeam)
 
-    if len(successors) == 1:
-      return best(successors, graph)
-    if len(successors) == 0 :
+    if len(nextbeam) == 1:
+      return best(nextbeam, graph)
+    if len(nextbeam) == 0 :
       return best(beam, graph)
 
-    beam = selectNextKSuccessors(nextSuc, beamNum, graph)
+    beam = selectNextBeam(nextSuc, beamNum, graph)
 
   return best(beam, graph)
 
+
+
+def initBeam(beamNum, cityNum):
+  return [getRandomSequence(cityNum) for i in range(beamNum)]
+
+
+def climbToNextBeam(curState, graph, beamNum):
+  row = len(graph)
+  curCost = cost(curState, graph)
+  beam = []
+  for i in range(row):
+    for j in range(i + 1, row):
+      nextState = curState[:]
+      nextState[i], nextState[j] = nextState[j], nextState[i]
+      nextCost = cost(nextState, graph)
+      if nextCost < curCost:
+        beam.append(nextState)
+        if len(beam) >= beamNum:
+          return beam
+
+  return beam
+
+
+def selectNextBeam(nextSucs, beamNum, graph):
+  tup = [(cost(state, graph), state) for state in nextSucs]
+  sortedStates = sorted(tup, key=lambda x: x[0])
+
+  kth= sortedStates[:beamNum]
+
+  return [t[1] for t in kth]
+
+def best(beam, graph):
+  return max([cost(state, graph) for state in beam])
 
 def cost(chromosome, city_distance_data):
   distance = 0
@@ -42,38 +75,3 @@ def getRandomSequence(city_num):
   ans.extend(chromosome)
 
   return ans
-
-def initBeam(beamNum, cityNum):
-  return [getRandomSequence(cityNum) for i in range(beamNum)]
-
-
-def climbToNextKSuccessors(curState, graph, beamNum):
-  row = len(graph)
-  curCost = cost(curState, graph)
-  beam = []
-  for i in range(row):
-    for j in range(i + 1, row):
-      nextState = curState[:]
-      nextState[i], nextState[j] = nextState[j], nextState[i]
-      nextCost = cost(nextState, graph)
-      if nextCost < curCost:
-        beam.append(nextState)
-        if len(beam) >= beamNum:
-          return beam
-
-  return beam
-
-
-def selectNextKSuccessors(nextSucs, beamNum, graph):
-  tup = [(cost(state, graph), state) for state in nextSucs]
-  sortedStates = sorted(tup, key=lambda x: x[0])
-
-  kth= sortedStates[:beamNum]
-
-  return [t[1] for t in kth]
-
-def best(beam, graph):
-  return max([cost(state, graph) for state in beam])
-
-
-

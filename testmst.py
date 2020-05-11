@@ -3,7 +3,7 @@ import unittest
 from graph import Graph
 
 from  data import graph1, fillgraph
-from probabilitisticmst import mst
+from probabilisticmst import mst
 class MyTestCase(unittest.TestCase):
     def test_propabilisitc_mst(self):
         graph = fillgraph(graph1)
