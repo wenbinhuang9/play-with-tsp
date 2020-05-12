@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from mst import mst
 import probabilisticmst
 from localbeam import localBeamSearch
-from graph import Graph
+
 import msthillclimbing
 
 class MyTestCase(unittest.TestCase):
@@ -97,25 +97,6 @@ class MyTestCase(unittest.TestCase):
             for j in range(col):
                 if i > j:
                     graph[i][j] = graph[j][i]
-
-    def testMst(self):
-        self.fillgraph(graph1)
-        tree = mst(graph1)
-
-        print tree
-        num = len(tree)
-        g = Graph()
-        min_bound = 0
-        for i in range(num):
-            for j in range(i, num):
-                if tree[i][j] > 0:
-                    g.edge(str(i), str(j),symbol=str(tree[i][j]))
-                    min_bound += tree[i][j]
-
-        print min_bound
-        g.render("./mst")
-
-
 
     def drawHist(self, data):
         plt.hist(data, bins=int(100))

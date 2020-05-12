@@ -1,5 +1,6 @@
 import random
-
+from  util import fillgraph, drawHist
+from data import graph1
 def localBeamSearch(graph, beamNum):
   row, col = len(graph), len(graph[0])
   cityNum = row
@@ -75,3 +76,19 @@ def getRandomSequence(city_num):
   ans.extend(chromosome)
 
   return ans
+
+if __name__ == "__main__":
+
+  iteration = 50
+
+  print ("begin running local beam search for {0} times".format(iteration))
+  fillgraph(graph1)
+
+  scores = []
+  for i in range(iteration):
+    maxcost = localBeamSearch(graph1, 100)
+    print (maxcost)
+    scores.append(maxcost)
+
+  print ("final result, tsp min cost = {0}; tsp max cost = {1};tsp average cost = {2}".format(min(scores), max(scores), sum(scores) / (len(scores) + 0.0)))
+  drawHist(scores)

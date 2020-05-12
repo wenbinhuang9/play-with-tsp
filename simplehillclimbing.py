@@ -1,5 +1,6 @@
 import random
-
+from  util import fillgraph, drawHist, mean, median
+from data import graph1
 def hillClimbing(graph):
   cityNum, row, col = len(graph), len(graph), len(graph[0])
 
@@ -52,6 +53,22 @@ def cost(chromosome, city_distance_data):
 
   return distance
 
+if __name__ == "__main__":
+  runTimes = 200
+  fillgraph(graph1)
+  ans = []
+  print ("begin running simple hill climbing for {0} times".format(runTimes))
+  for i in range(runTimes):
+    seq = hillClimbing(graph1)
+    seq_cost = cost(seq, graph1)
+    print (seq_cost)
+    ans.append((seq, seq_cost))
+  cost_list = [float(ans[i][1]) for i in range(len(ans))]
+
+
+  print ("final result, tsp min cost = {0}; tsp max cost = {1};tsp average cost = {2}".format(min(cost_list), max(cost_list), sum(cost_list) / (len(cost_list) + 0.0)))
+
+  drawHist(cost_list)
 
 
 
